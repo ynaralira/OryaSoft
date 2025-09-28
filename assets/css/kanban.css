@@ -1,0 +1,477 @@
+/* Estilos para o Kanban de Projetos */
+
+.kanban-container {
+    padding: 20px 0;
+}
+
+/* Layout do header do Kanban: botões à esquerda e switch à direita */
+.kanban-container .page-header { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 16px; 
+  margin-bottom: 16px; 
+}
+.kanban-container .header-content { flex: 1 1 auto; min-width: 0; }
+.kanban-container .header-actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  flex: 1 1 auto; 
+}
+
+/* Ordenação: selector e "Novo Projeto" primeiro, "Nova Tarefa" depois, switch por último à direita */
+.kanban-container .header-actions .project-selector { order: 0; }
+.kanban-container .header-actions .btn.btn-outline { order: 0; }
+.kanban-container .header-actions .btn.btn-primary { order: 1; }
+.kanban-container .header-actions .view-switch { order: 2; margin-left: auto; }
+
+.kanban-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.kanban-filters {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.kanban-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    min-height: 500px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.00));
+    padding-bottom: 8px;
+}
+
+.kanban-column {
+    background: var(--gray-light);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    min-height: 500px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--gray-medium);
+    transition: background 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
+    position: relative;
+}
+
+/* Colunas: acento por status */
+.kanban-column[data-status="todo"] { border-top: 4px solid #6b7280; }
+.kanban-column[data-status="in_progress"] { border-top: 4px solid #2563eb; }
+.kanban-column[data-status="review"] { border-top: 4px solid #f59e0b; }
+.kanban-column[data-status="done"] { border-top: 4px solid #16a34a; }
+
+.column-header {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gray-medium);
+}
+
+.column-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+.column-title::before {
+  content: ""; width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+}
+.kanban-column[data-status="todo"] .column-title::before { background: #6b7280; }
+.kanban-column[data-status="in_progress"] .column-title::before { background: #2563eb; }
+.kanban-column[data-status="review"] .column-title::before { background: #f59e0b; }
+.kanban-column[data-status="done"] .column-title::before { background: #16a34a; }
+
+/* Contador de tarefas no header da coluna (compatível com markup atual) */
+.column-count, .task-count {
+    background: var(--primary-wine);
+    color: white;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 12px;
+    min-width: 20px;
+    text-align: center;
+    background: rgba(17,17,17,.8); 
+    color: #fff; 
+    font-size: 12px; 
+    padding: 2px 10px; 
+    border-radius: 999px; 
+    min-width: 26px; 
+    text-align: center; 
+}
+.kanban-column[data-status="todo"] .task-count { background: #6b7280; }
+.kanban-column[data-status="in_progress"] .task-count { background: #2563eb; }
+.kanban-column[data-status="review"] .task-count { background: #f59e0b; }
+.kanban-column[data-status="done"] .task-count { background: #16a34a; }
+
+.column-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.add-task-btn {
+    background: none;
+    border: none;
+    color: var(--primary-gray);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+}
+
+.add-task-btn:hover {
+    background: var(--gray-medium);
+    color: var(--primary-wine);
+}
+
+.kanban-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 400px;
+}
+
+/* Container de tarefas usado no markup */
+.column-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 4px;
+    scrollbar-width: thin;
+}
+.column-content::-webkit-scrollbar { width: 8px; }
+.column-content::-webkit-scrollbar-thumb { background: var(--gray-medium); border-radius: 8px; }
+.column-content::-webkit-scrollbar-thumb:hover { background: #b9b9b9; }
+
+.task-card {
+  /* base refinada */
+  border-radius: 12px;
+  padding: 12px 12px 10px;
+  border-left: 4px solid transparent;
+  transition: box-shadow .2s ease, transform .12s ease, border-color .2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+/* Acento por status (via coluna ancestral) */
+.kanban-column[data-status="todo"] .task-card { border-left-color: #6b7280; }
+.kanban-column[data-status="in_progress"] .task-card { border-left-color: #2563eb; }
+.kanban-column[data-status="review"] .task-card { border-left-color: #f59e0b; }
+.kanban-column[data-status="done"] .task-card { border-left-color: #16a34a; }
+
+.task-card:hover { box-shadow: 0 6px 18px rgba(0,0,0,.10); transform: translateY(-1px); }
+.task-card.dragging { opacity: .85; box-shadow: 0 10px 24px rgba(0,0,0,.18); transform: scale(.99); }
+
+/* Cabeçalho do card */
+.task-card .task-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.task-card .task-header .task-priority { letter-spacing: .2px; }
+
+/* Conteúdo */
+.task-card .task-content { margin: 0; }
+.task-card .task-title { margin: 0 0 6px; font-size: 15px; line-height: 1.3; color: var(--primary-black); font-weight: 700; }
+.task-card .task-description { margin: 0; font-size: 12.8px; color: var(--primary-gray); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-clamp: 2; }
+
+/* Rodapé */
+.task-card .task-footer { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.task-card .task-meta { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* Pills de meta */
+.task-card .task-due-date, .task-card .task-hours {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #f7f7f7; color: var(--primary-gray);
+  border: 1px solid var(--gray-medium);
+  padding: 2px 8px; border-radius: 999px; font-size: 11.5px;
+}
+.task-card .task-due-date i, .task-card .task-hours i { opacity: .8; }
+
+/* Estados de data */
+.task-card .task-due-date.overdue { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+.task-card .task-due-date.due-soon { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+
+/* Avatar do responsável (compatível com classes atuais) */
+.assignee-avatar, .task-assignee-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--gray-medium);
+    object-fit: cover;
+}
+.task-footer .task-assignee { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+
+/* Botões de ação compactos */
+.task-actions { display: inline-flex; gap: 6px; }
+.task-action-btn { width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; border-radius: 8px; }
+.task-action-btn[data-action="delete"] {
+  background: #fff;
+  border: 1px solid var(--primary-wine);
+  color: var(--primary-wine);
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  transition: background .18s ease, color .18s ease, border-color .18s ease, transform .08s ease;
+}
+.task-action-btn[data-action="delete"] i { font-size: 12px; line-height: 1; }
+.task-action-btn[data-action="delete"]:hover { background: var(--primary-wine); color: #fff; }
+.task-action-btn[data-action="delete"]:active { transform: scale(0.96); }
+.task-action-btn[data-action="delete"]:focus-visible { outline: 2px solid var(--primary-wine); outline-offset: 2px; }
+.task-action-btn:hover { background: #f1f1f1; }
+
+/* Acessibilidade de foco */
+.task-card:focus-visible { outline: 2px solid var(--primary-wine); outline-offset: 2px; }
+
+/* --- Fim: Task Card --- */
+
+/* Modal para criar/editar projeto */
+.project-form {
+    display: grid;
+    gap: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.priority-selector {
+    display: flex;
+    gap: 8px;
+}
+
+.priority-option {
+    padding: 8px 16px;
+    border: 1px solid var(--gray-medium);
+    border-radius: var(--border-radius);
+    background: white;
+    cursor: pointer;
+    font-size: 12px;
+    transition: var(--transition);
+}
+
+.priority-option.selected {
+    background: var(--primary-wine);
+    color: white;
+    border-color: var(--primary-wine);
+}
+
+.tag-input-container {
+    position: relative;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.tag-item {
+    background: var(--wine-light);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tag-remove {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tag-remove:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Filtros de projeto */
+.project-filters {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: var(--gray-light);
+    border-radius: var(--border-radius);
+}
+
+.filter-chip {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid var(--gray-medium);
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.filter-chip.active {
+    background: var(--primary-wine);
+    color: white;
+    border-color: var(--primary-wine);
+}
+
+.filter-chip:hover {
+    border-color: var(--primary-wine);
+}
+
+/* Board de Projetos (projetos como cartões por status) */
+.project-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+.project-column { background: var(--gray-light); border: 1px solid var(--gray-medium); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+.project-column .column-header { display:flex; align-items:center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--gray-medium); }
+.project-column .column-title { font-size: 14px; font-weight: 600; }
+.project-column .column-content { padding: 10px; display: flex; flex-direction: column; gap: 10px; min-height: 120px; }
+.project-card { background: #fff; border: 1px solid #e7e7e7; border-radius: 12px; padding: 14px; box-shadow: 0 2px 14px rgba(0,0,0,0.08); cursor: grab; }
+.project-card .name { font-weight: 600; margin-bottom: 6px; font-size: 15px; }
+.project-card .members { margin-top: 8px; }
+.project-card .members .form-control { min-height: 72px; }
+.project-card.dragging { opacity: .75; box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+.project-column .column-content.drag-over { outline: 2px dashed var(--primary-wine); outline-offset: -6px; }
+
+/* Ações do card de projeto */
+.project-card { position: relative; }
+.project-card .card-actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
+.icon-btn { background: #fff; border: 1px solid var(--gray-medium); color: var(--primary-gray); padding: 6px; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.icon-btn:hover { border-color: var(--primary-wine); color: var(--primary-wine); }
+.icon-btn.danger { border-color: var(--primary-wine); color: var(--primary-wine); }
+.icon-btn.danger:hover { background: #fee2e2; }
+
+@media (max-width: 1024px) { .project-board { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .project-board { grid-template-columns: 1fr; } }
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .kanban-board {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .kanban-column {
+        min-height: auto;
+    }
+    
+    .kanban-tasks {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .kanban-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .kanban-filters {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .project-filters {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+@media (max-width: 560px) {
+  .task-card .task-description { -webkit-line-clamp: 1; line-clamp: 1; }
+}
+
+/* Modal base (Kanban) */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; z-index:2400; padding:40px 20px; }
+.modal-overlay.open { display:flex !important; }
+.modal-overlay .modal { background:#fff; border-radius:14px; max-width:640px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 8px 28px -6px rgba(0,0,0,.25); }
+.modal .modal-header { display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--gray-medium); }
+.modal .modal-body { padding:16px; }
+.modal .modal-footer { padding:12px 16px; border-top:1px solid var(--gray-medium); display:flex; gap:8px; justify-content:flex-end; }
+
+/* Switch de alternância Tarefas/Projetos */
+.view-switch { display:flex; align-items:center; gap:10px; margin-left: 8px; }
+.view-switch .vs-label { font-size: 13px; color: var(--primary-gray); }
+.switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--gray-medium); transition: .2s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+input:checked + .slider { background-color: var(--primary-wine); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+/* Utilitário para alternar seções */
+.hidden { display: none !important; }
+
+/* Project Info: ações na mesma linha (Editar, Membros, menu) */
+.project-info { 
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: space-between; 
+  gap: 16px; 
+}
+.project-info .project-details { flex: 1 1 auto; min-width: 0; }
+.project_info .project-actions { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  flex: 0 0 auto; 
+  white-space: nowrap; 
+}
+.project-info .project-actions .btn { flex: 0 0 auto; }
+.project-info .project-actions .dropdown { display: inline-flex; }
+.project-info .project-actions .dropdown-toggle { display: inline-flex; align-items: center; }
+
+@media (max-width: 640px) {
+  /* Em telas muito pequenas, mantém ações em linha com possibilidade de overflow horizontal leve */
+  .project-info { align-items: center; }
+  .project-info .project-actions { overflow-x: auto; padding-bottom: 2px; }
+}
+
+/* Resumo de projetos (apenas na visão de Projetos) */
+.projects-summary { display: none; margin-top: 6px; gap: 12px; color: var(--primary-gray); font-size: 13px; }
+.projects-summary .summary-item { display: inline-flex; align-items: center; gap: 6px; }
+.projects-summary .summary-item i { color: var(--primary-wine); }
+
+/* Modal de Membros */
+.members-toolbar { display:flex; align-items:center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.members-toolbar .search-box { display:flex; align-items:center; gap:8px; background:#fff; border:1px solid var(--gray-medium); border-radius:8px; padding:6px 10px; flex:1; }
+.members-toolbar .search-box i { color: var(--primary-gray); }
+.members-toolbar .search-box input { border:0; outline:none; width:100%; }
+.members-toolbar .members-actions-inline { display:flex; align-items:center; gap:8px; white-space:nowrap; }
+.members-counter { color: var(--primary-gray); font-size: 12px; }
+
+.members-list { max-height: 420px; overflow-y: auto; border:1px solid var(--gray-medium); border-radius: 10px; padding: 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.member-item { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #ececec; border-radius:10px; padding:8px; cursor:pointer; transition: box-shadow .15s ease; }
+.member-item:hover { box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+.member-item input[type="checkbox"] { width:16px; height:16px; }
+.member-avatar { width:28px; height:28px; border-radius:50%; border:1px solid var(--gray-medium); object-fit:cover; }
+.member-name { font-size: 14px; font-weight: 600; }
+.member-role { font-size: 12px; color: var(--primary-gray); }

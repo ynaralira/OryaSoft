@@ -1,0 +1,18 @@
+/* Perfil - estilos */
+.profile-container{max-width:1000px;margin:0 auto;padding:24px;display:grid;grid-template-columns:300px 1fr;gap:16px}
+@media(max-width:900px){.profile-container{grid-template-columns:1fr}}
+
+.profile-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px}
+.profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:10px}
+.profile-avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:2px solid #e5e7eb}
+.avatar-actions{display:flex;gap:8px}
+
+.profile-info .form-group{margin-bottom:12px}
+.form-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat{background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:10px;text-align:center}
+.stat .num{font-weight:700;font-size:18px}
+
+.links{display:flex;gap:8px;margin-top:8px}
+.links a{display:inline-flex;align-items:center;gap:6px}
