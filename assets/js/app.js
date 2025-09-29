@@ -40,22 +40,19 @@ class OryaApp {
             }
         });
 
-        // Escape key to close modals
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeModal();
             }
         });
 
-        // Form submissions
         document.addEventListener('submit', (e) => {
             const form = e.target;
             if (form.classList.contains('ajax-form')) {
-                // Evitar conflito: alguns formulários têm handlers próprios (meetings/kanban)
                 if (form.id === 'meeting-form' || form.id === 'project-form' || form.id === 'task-form') {
-                    return; // deixa o listener específico cuidar
+                    return; 
                 }
-                // Bloqueio de dupla submissão
+    
                 if (form.dataset.submitting === '1') {
                     e.preventDefault();
                     return;
@@ -71,9 +68,9 @@ class OryaApp {
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.querySelector('.main-content');
         
-        // Load sidebar state from localStorage
+
         const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
-        // Só aplica collapsed se NÃO for mobile
+
         if (isCollapsed && window.innerWidth > 900) {
             sidebar?.classList.add('collapsed');
             mainContent?.classList.add('sidebar-collapsed');
@@ -82,7 +79,7 @@ class OryaApp {
             mainContent?.classList.remove('sidebar-collapsed');
         }
 
-        // Highlight active nav item
+
         const currentPath = window.location.pathname;
         const navLinks = document.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
@@ -95,8 +92,7 @@ class OryaApp {
     toggleSidebar() {
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.querySelector('.main-content');
-        
-        // Só permite toggle collapsed se NÃO for mobile
+
         if (window.innerWidth > 900) {
             sidebar?.classList.toggle('collapsed');
             mainContent?.classList.toggle('sidebar-collapsed');
@@ -109,7 +105,6 @@ class OryaApp {
     setupNotifications() {
         this.loadNotifications();
         
-        // Check for new notifications every 30 seconds
         setInterval(() => {
             this.loadNotifications();
         }, 30000);
@@ -122,7 +117,6 @@ class OryaApp {
             if (!response.ok) return;
             const data = await response.json();
             if (data.success) {
-                // Ordenar por created_at DESC, se não existir, por id DESC
                 this.notifications = (data.notifications || []).slice().sort((a, b) => {
                     if (a.created_at && b.created_at) {
                         return new Date(b.created_at) - new Date(a.created_at);
@@ -204,7 +198,6 @@ class OryaApp {
                 })
             });
             
-            // Update local state
             const notification = this.notifications.find(n => n.id === notificationId);
             if (notification) {
                 notification.is_read = true;
@@ -242,7 +235,6 @@ class OryaApp {
             }, 300);
         });
 
-        // Setup search results dropdown
         this.createSearchDropdown();
     }
 
@@ -373,7 +365,6 @@ class OryaApp {
         const submitBtn = form.querySelector('[type="submit"]');
         const originalText = submitBtn?.textContent;
 
-        // Show loading state
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Carregando...';
@@ -390,12 +381,10 @@ class OryaApp {
             if (data.success) {
                 this.showNotification('Sucesso!', data.message || 'Operação realizada com sucesso', 'success');
                 
-                // Close modal if form is in a modal
+            
                 if (form.closest('.modal-overlay')) {
                     this.closeModal();
-                }
-                
-                // Reload page or redirect if specified
+       
                 if (data.reload) {
                     window.location.reload();
                 } else if (data.redirect) {
@@ -427,7 +416,7 @@ class OryaApp {
             <button class="notification-close">&times;</button>
         `;
 
-        // Add to page
+
         let container = document.querySelector('.notifications-container');
         if (!container) {
             container = document.createElement('div');
@@ -437,12 +426,11 @@ class OryaApp {
         
         container.appendChild(notification);
 
-        // Close button
+
         notification.querySelector('.notification-close').addEventListener('click', () => {
             notification.remove();
         });
 
-        // Auto remove after 5 seconds
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.remove();
@@ -468,7 +456,6 @@ class OryaApp {
     updateUserInterface() {
         if (!this.currentUser) return;
 
-        // Update user avatar and name in topbar
         const userAvatar = document.querySelector('.user-avatar');
         const userName = document.querySelector('.user-name');
 
@@ -483,7 +470,7 @@ class OryaApp {
     }
 
     initializeModules() {
-        // Initialize page-specific modules
+ 
         const currentPage = document.body.dataset.page;
         
         switch (currentPage) {
@@ -520,7 +507,7 @@ class OryaApp {
         }
     }
 
-    // Utility functions
+
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
@@ -600,12 +587,10 @@ class OryaApp {
     }
 }
 
-// Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.oryaApp = new OryaApp();
 });
 
-// Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = OryaApp;
 }
