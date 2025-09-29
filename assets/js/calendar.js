@@ -1,20 +1,9 @@
-// Calendar page script placeholder
-// This file exists to avoid 404 when included by pages/calendar.php via $additional_js = ['calendar'].
-// The page currently uses inline <script> for its logic.
-
-document.addEventListener('DOMContentLoaded', function () {
-  // Placeholder. Move inline calendar JS here in the future if desired.
-  // console.log('calendar.js carregado');
-});
-
-// Calendar page logic (migrated from inline script)
 (function() {
   const init = window.CALENDAR_INIT || {};
   let currentMonth = parseInt(init.currentMonth, 10) || (new Date().getMonth() + 1);
   let currentYear = parseInt(init.currentYear, 10) || (new Date().getFullYear());
   let currentView = 'month';
 
-  // Navegação do calendário
   function changeMonth(direction) {
     currentMonth += direction;
     if (currentMonth < 1) {
@@ -51,7 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Mudando para visualização:', view);
   }
 
-  // Abrir detalhes do dia
   function openDayView(date) {
     document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
     const el = document.querySelector(`.calendar-day[data-date="${date}"]`);
@@ -88,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log('Exportar calendário');
   }
 
-  // Expor no escopo global para uso pelos atributos onclick no HTML
   window.changeMonth = changeMonth;
   window.goToToday = goToToday;
   window.changeView = changeView;
